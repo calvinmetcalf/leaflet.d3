@@ -1,0 +1,151 @@
+<!DOCTYPE html><html>
+<meta charset="utf-8"><title>D3!</title>
+<style>
+
+  html { height: 100% }
+			body { height: 100%; margin: 0; padding: 0;}
+			#map{ height: 100% }
+
+.bike {
+  stroke: #fff;
+  stroke-width: 4px;
+  fill:none;
+}
+.bike.b1 {
+	 stroke: #E41A1C;
+}
+.bike.b2 {
+	 stroke: #377EB8;
+}
+.bike.b3 {
+	 stroke: #4DAF4A;
+}
+.bike.b4 {
+	 stroke: #984EA3;
+}
+.bike.b5 {
+	 stroke: #FF7F00;
+}
+.bike.b6 {
+	 stroke: #FFFF33;
+}
+.bike.b7 {
+	 stroke: #A65628;
+}
+.bike.b8 {
+	 stroke: #F781BF;
+}
+.bike.b9 {
+	 stroke: #999999;
+}
+.bike:hover {
+  stroke: brown;
+  cursor:pointer;
+}
+.town { 
+	stroke-width : 0;
+	fill: #000;
+	fill-opacity: .4;
+	stroke: #fff; 
+}
+.town.f1 { fill: #3a26ab; }
+.town.f2 { fill: #3c8c47; }
+.town.f3 { fill: #a6242d; }
+.town.f4 { fill: #ffaa00; }
+.town:hover {
+  fill: brown;
+  fill-opacity: .7;
+  cursor:pointer;
+}
+</style><link rel="stylesheet" href="leaflet/leaflet.css" />
+<!--[if lte IE 8]>
+	<link rel="stylesheet" href="leaflet/leaflet.ie.css" />
+<![endif]-->
+
+<script src="leaflet/leaflet.js"></script>
+<body>
+<div id="map"></div>
+<script src="js/d3.v3.js"></script>
+<script src="js/topojson.v0.js"></script>
+<script src="leaflet.d3.js"></script>
+<script>
+var m = L.map("map").setView([42.08, -71.64],8);
+
+var stamenAttribution = 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; ' +
+		  'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
+		  
+var tiles = L.layerGroup(
+	[
+		L.tileLayer(
+			"http://{s}.tile.stamen.com/terrain-background/{z}/{x}/{y}.jpg",
+			{
+				minZoom:4,
+				maxZoom:18
+			}
+		),
+		L.tileLayer(
+			"http://{s}.tile.stamen.com/terrain-lines/{z}/{x}/{y}.png",
+			{
+				minZoom:4,
+				maxZoom:18,
+				attribution:stamenAttribution
+			}
+		)
+	]
+).addTo(m);
+	
+var topo=L.d3("json/ma.topo.json",{topojson:"TOWNS",pathClass:function(d) { return "town f" + d.properties.FOURCOLOR; }});
+var nontopo=L.d3("json/bikes.json",{pathClass:function(d){
+	var stat;
+	var facT =d.properties.FacilityType;
+	var pn = facT.indexOf("(");
+	if( pn>0 ){
+				facT = facT.slice(0,pn);
+		}
+		switch (facT.trim()) {
+			case 'Bike lane':
+				stat=1;
+				break;
+			case "Bicycle/Pedestrian priority roadway":
+				stat=2;
+				break;
+			case "Cycle track":
+					stat=3;
+				break;
+			case "Marked shared lane":
+					stat=4;
+				break;
+			case "Shared use path":
+					stat=5;
+				break;
+			case "Sign-posted on-road bike route":
+				stat=6;
+				break;
+			case "On-Road - To Be Determined":
+					stat=7;
+				break;
+			case "Paved bike shoulder":
+				stat=8;
+				break;
+			case "Hybrid":
+					stat=9;
+				break;
+		}
+
+	return "bike b" + stat;
+}}).addTo(m);
+var stamenWaterColor = L.tileLayer(
+	'http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',
+	{
+		minZoom: 3,
+		maxZoom: 16,
+		attribution:stamenAttribution
+	}
+);
+
+ L.control.layers({"Stamen Terrain":tiles,"Stamen Watercolors":stamenWaterColor},{"topo":topo,"nontopo":nontopo},{collapsed:false}).addTo(m);   
+	
+
+</script>
+</body>
+</html>
