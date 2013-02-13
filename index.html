@@ -61,12 +61,16 @@
   fill-opacity: .7;
   cursor:pointer;
 }
+.bar {
+  fill: steelblue;
+  fill-opacity: .9;
+}
 </style><link rel="stylesheet" href="leaflet/leaflet.css" />
 <!--[if lte IE 8]>
 	<link rel="stylesheet" href="leaflet/leaflet.ie.css" />
 <![endif]-->
 
-<script src="leaflet/leaflet.js"></script>
+<script src="leaflet/leaflet-src.js"></script>
 <link rel="stylesheet" href="css/gh-fork-ribbon.css" />
     <!--[if IE]>
         <link rel="stylesheet" href="css/gh-fork-ribbon.ie.css" />
@@ -149,6 +153,22 @@ var nontopo=L.d3("json/bikes.json",{pathClass:function(d){
 
 	return "bike b" + stat;
 }}).addTo(m);
+nontopo.bindPopup(function(p){
+	var out =[];
+	for(var key in p){
+		if(p[key] && p[key] !== "" && ["Shape_Length","OBJECTID"].indexOf(key) === -1){
+			out.push("<strong>"+key+"</strong>: "+p[key]);
+		}
+	}
+	return out.join("<br/>");
+});
+topo.bindPopup(function(p){
+	var out =[];
+	for(var key in p){
+		out.push("<strong>"+key+"</strong>: "+p[key]);
+	}
+	return out.join("<br/>");
+	});
 var stamenWaterColor = L.tileLayer(
 	'http://{s}.tile.stamen.com/watercolor/{z}/{x}/{y}.jpg',
 	{

@@ -52,6 +52,8 @@ L.D3 = L.Class.extend({
 		}else{
 			this.on("dataLoaded",this.onLoaded,this);
 		}
+		this._popup=L.popup();
+		this.fire("added");
 	},
 	addTo: function (map) {
 		map.addLayer(this);
@@ -84,7 +86,37 @@ L.D3 = L.Class.extend({
     this._g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
 
     this._feature.attr("d", this._path);
+	},
+	bindPopup:function(content){
+		this._popup=L.popup();
+		this._popupContent = content;
+		if(this._map){
+			this._bindPopup();
+		}else{
+			this.on("added",this._bindPopup,this);
+		}
+	},
+	_bindPopup:function(){
+		var _this=this;
+		_this._g.on("click",function(){
+			var props=d3.select(d3.event.target).datum().properties;
+			if(typeof _this._popupContent==="string"){
+				_this.fire("pathClicked",{cont:_this._popupContent});
+			}else if(typeof _this._popupContent==="function"){
+				_this.fire("pathClicked",{cont:_this._popupContent(props)});
+			}
+			
+		},true);
+		_this.on("pathClicked",function(e){_this._popup.setContent(e.cont);
+			_this._openable=true;;});
+		_this._map.on("click",function(e){
+			if(_this._openable){
+				_this._openable=false;
+				_this._popup.setLatLng(e.latlng).openOn(_this._map);
+			}
+		});
 	}
+
 	
 });
 L.d3=function(data,options){
