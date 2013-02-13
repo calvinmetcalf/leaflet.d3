@@ -160,7 +160,7 @@ nontopo.bindPopup(function(p){
 			out.push("<strong>"+key+"</strong>: "+p[key]);
 		}
 	}
-	return out.join("<br/>");
+	return "<ul><li>"+out.join("</li><li>")+"</li></ul>";
 });
 topo.bindPopup(function(p){
 	var out =[];
@@ -178,7 +178,7 @@ var stamenWaterColor = L.tileLayer(
 	}
 );
 
- L.control.layers({"Stamen Terrain":tiles,"Stamen Watercolors":stamenWaterColor},{"topo":topo,"nontopo":nontopo},{collapsed:false}).addTo(m);   
+ L.control.layers({"Stamen Terrain":tiles,"Stamen Watercolors":stamenWaterColor},{"Towns (topojson)":topo,"Bike Paths (geojson)":nontopo},{collapsed:false}).addTo(m);   
 	
 
 </script>
