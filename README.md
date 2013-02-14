@@ -21,3 +21,5 @@ where data is either a url to geojson or topojson data or it can be an object, a
 Your going to want to add css styles manually, note that by default csv closes paths and fills them for you if you don't specify "fill:none;" Also I'd avoid styling "path" as that will effect all leaflet paths, including regular ones made inside leaflet. 
 
 the layer also has a method "bindPopup" with one argument which is content.  This binds a popup to the layer with the content set to content, which may be a string which is just passed on unchanged or a function which is called on the properties of the feature clicked question. 
+
+added two more options, svgClass which just takes a string which lets you set a class on the whole layer, useful for things like colorbrewer which expect this, and "before" which takes a function and is called with the data as an argument and the feature class as this. useful if you need to calculate stats for a range. its called right before the feautes are added to the map and right after path and bounds are calculated. 

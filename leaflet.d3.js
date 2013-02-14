@@ -61,8 +61,8 @@ L.D3 = L.Class.extend({
 		return this;
 	},
 	onLoaded: function(){
-		this._bounds = d3.geo.bounds(this.data);
-		this._path = d3.geo.path().projection(this._project);
+		this.bounds = d3.geo.bounds(this.data);
+		this.path = d3.geo.path().projection(this._project);
 		if(this.options.before){
 			this.options.before.call(this, this.data);
 		}
@@ -79,8 +79,8 @@ L.D3 = L.Class.extend({
 	},
 
 	_reset: function () {
-		 var bottomLeft = this._project(this._bounds[0]),
-        topRight = this._project(this._bounds[1]);
+		 var bottomLeft = this._project(this.bounds[0]),
+        topRight = this._project(this.bounds[1]);
 
     this._el .attr("width", topRight[0] - bottomLeft[0])
         .attr("height", bottomLeft[1] - topRight[1])
@@ -89,7 +89,7 @@ L.D3 = L.Class.extend({
 
     this._g   .attr("transform", "translate(" + -bottomLeft[0] + "," + -topRight[1] + ")");
 
-    this._feature.attr("d", this._path);
+    this._feature.attr("d", this.path);
 	},
 	bindPopup:function(content){
 		this._popup=L.popup();
