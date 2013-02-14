@@ -5,6 +5,7 @@ L.D3 = L.Class.extend({
 		type:"json",
 		topojson:false,
 		pathClass:"path"
+		
 	},
 	initialize: function (data,options) {
 		var _this = this;
@@ -46,7 +47,7 @@ L.D3 = L.Class.extend({
 			return [point.x, point.y];
 		};
 		this._el = d3.select(this._map.getPanes().overlayPane).append("svg");
-		this._g = this._el.append("g").attr("class", "leaflet-zoom-hide");
+		this._g = this._el.append("g").attr("class",this.options.svgClass?this.options.svgClass+" leaflet-zoom-hide":"leaflet-zoom-hide");
 		if(this._loaded){
 			this.onLoaded();
 		}else{
@@ -62,6 +63,9 @@ L.D3 = L.Class.extend({
 	onLoaded: function(){
 		this._bounds = d3.geo.bounds(this.data);
 		this._path = d3.geo.path().projection(this._project);
+		if(this.options.before){
+			this.options.before.call(this, this.data);
+		}
 		this._feature = this._g.selectAll("path").data(this.options.topojson?this.data.geometries:this.data.features).enter().append("path").attr("class", this.options.pathClass);
 		
 		
