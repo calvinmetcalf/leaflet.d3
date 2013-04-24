@@ -96,9 +96,9 @@ L.D3 = L.Class.extend({
 		this._popupContent = content;
 		if(this._map){
 			this._bindPopup();
-		}else{
-			this.on("added",this._bindPopup,this);
 		}
+			this.on("added",function(){this._bindPopup()},this);
+		
 	},
 	_bindPopup:function(){
 		var _this=this;
