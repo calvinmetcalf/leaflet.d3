@@ -1,11 +1,9 @@
 //very much based off of http://bost.ocks.org/mike/leaflet/
-L.D3 = L.Class.extend({
-	includes: L.Mixin.Events,
+L.D3 = L.FeatureGroup.extend({
 	options:{
 		type:"json",
 		topojson:false,
 		pathClass:"path"
-		
 	},
 	initialize: function (data,options) {
 		var _this = this;
@@ -56,10 +54,7 @@ L.D3 = L.Class.extend({
 		this._popup=L.popup();
 		this.fire("added");
 	},
-	addTo: function (map) {
-		map.addLayer(this);
-		return this;
-	},
+
 	onLoaded: function(){
 		this.bounds = d3.geo.bounds(this.data);
 		this.path = d3.geo.path().projection(this._project);
